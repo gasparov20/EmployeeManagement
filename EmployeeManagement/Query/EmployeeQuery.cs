@@ -11,13 +11,16 @@ public class EmployeeQuery : ObjectGraphType
 {
     public EmployeeQuery(IEmployeeRepository employeeRepository)
     {
+        // GetAllEmployees
         Field<ListGraphType<EmployeeType>>("GetAllEmployees")
             .Resolve(_ => employeeRepository.GetAllEmployees());
 
+        // GetEmployeeById
         Field<EmployeeType>("GetEmployeeById")
             .Arguments(new QueryArguments(new QueryArgument<IntGraphType> { Name = "employeeId" })).Resolve(
                 context => employeeRepository.GetEmployeeById(context.GetArgument<int>("employeeId")));
         
+        // GetEmployeesByName
         Field<ListGraphType<EmployeeType>>("GetEmployeesByName")
             .Arguments(new QueryArguments(new QueryArgument<StringGraphType> { Name = "firstName" },
                 new QueryArgument<StringGraphType> { Name = "lastName" })).Resolve(
@@ -28,6 +31,7 @@ public class EmployeeQuery : ObjectGraphType
                     return employeeRepository.GetEmployeesByName(firstName, lastName);
                 });
 
+        // GetAllEmployeesFiltered (by title, department, salary range)
         Field<ListGraphType<EmployeeType>>("GetAllEmployeesFiltered")
             .Arguments(new QueryArguments(new QueryArgument<EnumerationGraphType<FilterField>> { Name = "filterField" },
                 new QueryArgument<StringGraphType> { Name = "filterString" }))
@@ -50,6 +54,7 @@ public class EmployeeQuery : ObjectGraphType
                 return employeeRepository.GetAllEmployeesFiltered(filterField, filterString);
             });
         
+        // GetAllEmployeesSorted (by hire date, salary)
         Field<ListGraphType<EmployeeType>>("GetAllEmployeesSorted")
             .Arguments(new QueryArguments(new QueryArgument<EnumerationGraphType<SortField>> { Name = "orderBy" },
                 new QueryArgument<EnumerationGraphType<ListSortDirection>> { Name = "direction" }))

@@ -10,6 +10,7 @@ public class EmployeeMutation : ObjectGraphType
 {
     public EmployeeMutation(IEmployeeRepository employeeRepository)
     {
+        // Add Employee
         Field<EmployeeType>("AddEmployee")
             .Arguments(new QueryArguments(new QueryArgument<EmployeeInputType> { Name = "employee" })).Resolve(context =>
             {
@@ -17,7 +18,7 @@ public class EmployeeMutation : ObjectGraphType
                 return employeeRepository.AddEmployee(employee);
             });
         
-        
+        // Update Employee
         Field<EmployeeType>("UpdateEmployee")
             .Arguments(new QueryArguments(new QueryArgument<IntGraphType> { Name = "employeeId" },
                 new QueryArgument<EmployeeInputType> { Name = "employee" })).Resolve(context =>
@@ -27,6 +28,7 @@ public class EmployeeMutation : ObjectGraphType
                 return employeeRepository.UpdateEmployee(employeeId, employee);
             });
         
+        // Delete Employee
         Field<StringGraphType>("DeleteEmployee")
             .Arguments(new QueryArguments(new QueryArgument<IntGraphType> { Name = "employeeId" })).Resolve(context =>
             {
